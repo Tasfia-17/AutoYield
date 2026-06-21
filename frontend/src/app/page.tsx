@@ -44,7 +44,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen vault-bg font-body overflow-x-hidden">
+    <div className="min-h-screen animated-bg font-body overflow-x-hidden">
       <TfxOverlay trigger={tfx} />
 
       {/* Ticker */}
@@ -61,7 +61,7 @@ export default function LandingPage() {
       <nav className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-2">
           <span className="text-2xl animate-float">💰</span>
-          <span className="font-display text-2xl text-cream">AutoYield</span>
+          <span className="font-display text-2xl text-ink">AutoYield</span>
           <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-600 font-semibold ml-1">testnet</span>
         </div>
         <div className="flex items-center gap-3">
@@ -82,12 +82,12 @@ export default function LandingPage() {
       <section className="max-w-4xl mx-auto px-6 pt-16 pb-12 text-center">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <div className="text-7xl mb-6 animate-float">💰</div>
-          <h1 className="font-display text-5xl md:text-7xl text-cream leading-tight mb-4">
+          <h1 className="font-display text-5xl md:text-7xl text-ink leading-tight mb-4">
             Autonomous<br />
             <span className="text-amber-400">DeFi Yield</span><br />
             on Sui
           </h1>
-          <p className="text-cream/70 text-lg md:text-xl max-w-2xl mx-auto mb-8">
+          <p className="text-ink/70 text-lg md:text-xl max-w-2xl mx-auto mb-8">
             An AI agent manages your USDC across Scallop, DeepBook, and Cetus.
             Rebalances atomically with Sui PTBs. Every decision stored on Walrus.
           </p>
@@ -118,7 +118,7 @@ export default function LandingPage() {
 
       {/* Protocol Explorer */}
       <section className="max-w-5xl mx-auto px-6 py-12">
-        <h2 className="font-display text-3xl text-cream text-center mb-8">Protocol Explorer</h2>
+        <h2 className="font-display text-3xl text-ink text-center mb-8">Protocol Explorer</h2>
         <div className="grid grid-cols-3 gap-3 mb-6">
           {PROTOCOLS.map((p, i) => (
             <motion.button key={p.id} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
@@ -129,7 +129,7 @@ export default function LandingPage() {
                 border: `2px solid ${active === i ? p.color : 'transparent'}`,
               }}>
               <div className="text-3xl mb-1">{p.emoji}</div>
-              <div className="font-display text-sm text-cream">{p.name}</div>
+              <div className="font-display text-sm text-ink">{p.name}</div>
               <div className="text-xs mt-0.5" style={{ color: p.color }}>{p.badge}</div>
             </motion.button>
           ))}
@@ -159,7 +159,7 @@ export default function LandingPage() {
 
       {/* How it works */}
       <section className="max-w-4xl mx-auto px-6 py-12">
-        <h2 className="font-display text-3xl text-cream text-center mb-8">How It Works</h2>
+        <h2 className="font-display text-3xl text-ink text-center mb-8">How It Works</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {STEPS.map((s, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
@@ -175,7 +175,7 @@ export default function LandingPage() {
 
       {/* Agent loop */}
       <section className="max-w-3xl mx-auto px-6 py-12">
-        <h2 className="font-display text-3xl text-cream text-center mb-8">The Agent Loop</h2>
+        <h2 className="font-display text-3xl text-ink text-center mb-8">The Agent Loop</h2>
         <div className="glass rounded-2xl p-6">
           <div className="flex flex-wrap justify-center gap-2 text-sm font-semibold">
             {['SENSE', 'RECALL', 'REASON', 'GUARDRAILS', 'SIMULATE', 'EXECUTE', 'REMEMBER'].map((step, i, arr) => (

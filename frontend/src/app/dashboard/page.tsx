@@ -138,14 +138,14 @@ export default function Dashboard() {
   const blendedApy = vault?.blendedApy ?? 0;
 
   return (
-    <div className="min-h-screen vault-bg font-body">
+    <div className="min-h-screen animated-bg font-body">
       <TfxOverlay trigger={tfxTrigger} />
 
-      <nav className="sticky top-0 z-40 flex items-center justify-between px-6 py-4 glass-dark border-b border-amber-500/20">
+      <nav className="sticky top-0 z-40 flex items-center justify-between px-6 py-4 glass border-b border-amber-500/20">
         <button onClick={() => { setTfxTrigger(t => t + 1); setTimeout(() => router.push('/'), 300); }}
           className="flex items-center gap-2 hover:opacity-80 transition">
           <span className="text-xl animate-float">💰</span>
-          <span className="font-display text-xl text-cream">AutoYield</span>
+          <span className="font-display text-xl text-ink">AutoYield</span>
         </button>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-amber text-xs font-semibold text-amber-600">
