@@ -21,7 +21,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Glass card — core tabibito utility ── */
+/* ── Glass card - core tabibito utility ── */
 .glass {
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(16px);
@@ -44,7 +44,7 @@ body {
   border: 1.5px solid rgba(245, 158, 11, 0.2);
 }
 
-/* ── Animated gradient background — tabibito signature ── */
+/* ── Animated gradient background - tabibito signature ── */
 .animated-bg {
   background: linear-gradient(135deg, #FFFBF0, #FEF3C7, #FFF8E7, #FFFBEB, #FFFBF0);
   background-size: 400% 400%;
@@ -58,7 +58,7 @@ body {
   animation: bgShift 18s ease infinite;
 }
 
-/* ── Destination card hover lift — adapted for protocol cards ── */
+/* ── Destination card hover lift - adapted for protocol cards ── */
 .protocol-card {
   position: relative;
   overflow: hidden;
@@ -73,7 +73,7 @@ body {
   box-shadow: 0 0 0 3px var(--c1), 0 20px 50px rgba(245, 158, 11, 0.3);
 }
 
-/* ── Diagonal sweep transition — tabibito page transition ── */
+/* ── Diagonal sweep transition - tabibito page transition ── */
 .tfx-overlay {
   position: fixed; inset: 0; pointer-events: none; z-index: 100; overflow: hidden;
 }
@@ -96,7 +96,7 @@ body {
 .tfx-line:nth-child(5) { left: 70%; animation-delay: 0.16s; }
 .tfx-line:nth-child(6) { left: 85%; animation-delay: 0.20s; }
 
-/* ── Palette pulse ring — for active cards ── */
+/* ── Palette pulse ring - for active cards ── */
 @keyframes palette-pulse {
   0%,100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
   50% { box-shadow: 0 0 0 10px rgba(245,158,11,0); }

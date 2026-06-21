@@ -1,4 +1,4 @@
-/// Agent chat route — streams natural language explanations from GPT-4o.
+/// Agent chat route - streams natural language explanations from GPT-4o.
 /// Users can ask "why did you rebalance?" or "what's my P&L?" in plain English.
 import { Router } from 'express';
 import { z } from 'zod';

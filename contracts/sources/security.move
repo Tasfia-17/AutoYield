@@ -1,6 +1,6 @@
-/// AutoYield Security Module — deterministic guardrails that override AI decisions.
+/// AutoYield Security Module - deterministic guardrails that override AI decisions.
 /// Uses OpenZeppelin Rate Limiter for per-user and per-vault transaction limits.
-/// This module NEVER calls AI — it is purely rule-based. This is the trust anchor.
+/// This module NEVER calls AI - it is purely rule-based. This is the trust anchor.
 module autoyield::security;
 
 use sui::event;
@@ -23,7 +23,7 @@ const EAllocationSumInvalid: u64 = 105;
 const EConcentrationTooHigh: u64 = 106;
 const EDrawdownExceeded: u64 = 107;
 
-/// Per-vault guardian state — tracks limits and violations.
+/// Per-vault guardian state - tracks limits and violations.
 /// Owned object held by the agent.
 public struct GuardianState has key, store {
     id: UID,
@@ -71,7 +71,7 @@ public fun create_guardian(
 
 /// GUARDRAIL: Validate AI rebalance recommendation.
 /// Checks: confidence, allocations sum, concentration cap, shift limits, daily limit.
-/// ABORTS if any check fails — AI decision is rejected.
+/// ABORTS if any check fails - AI decision is rejected.
 public fun validate_rebalance(
     guardian: &mut GuardianState,
     vault_id: ID,
@@ -92,7 +92,7 @@ public fun validate_rebalance(
         EAllocationSumInvalid
     );
 
-    // 2. Confidence gate — reject if AI < 70% confidence
+    // 2. Confidence gate - reject if AI < 70% confidence
     assert!(confidence_score_bps >= 7000, EConfidenceTooLow);
 
     // 3. Expected improvement must exceed gas cost threshold (50 bps = 0.5%)
@@ -118,7 +118,7 @@ public fun validate_rebalance(
     };
     assert!(guardian.rebalance_count_today < MAX_DAILY_REBALANCES, EDailyLimitExceeded);
 
-    // 7. Drawdown check — current AUM vs peak
+    // 7. Drawdown check - current AUM vs peak
     if (current_total_assets > guardian.peak_assets) {
         guardian.peak_assets = current_total_assets;
     };
@@ -144,7 +144,7 @@ public fun validate_rebalance(
     });
 }
 
-/// GUARDRAIL: Validate withdrawal size — reject if > 50% of vault in one tx.
+/// GUARDRAIL: Validate withdrawal size - reject if > 50% of vault in one tx.
 public fun validate_withdrawal(
     vault_id: ID,
     amount: u64,

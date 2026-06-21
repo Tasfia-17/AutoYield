@@ -1,4 +1,4 @@
-/// MemWal Memory Layer — persistent, verifiable agent memory on Walrus.
+/// MemWal Memory Layer - persistent, verifiable agent memory on Walrus.
 /// Stores strategy decisions, market snapshots, and reasoning traces.
 /// Enables the AI to learn from past decisions and provide audit trails.
 import { MemWal } from '@mysten-incubation/memwal';
@@ -47,7 +47,7 @@ export class MemoryLayer {
       this.ready = true;
       logger.info('MemWal connected');
     } catch (err) {
-      logger.warn('MemWal unavailable — running without persistent memory', { err });
+      logger.warn('MemWal unavailable - running without persistent memory', { err });
     }
   }
 
@@ -95,7 +95,7 @@ export class MemoryLayer {
       });
 
       const job = await this.memwal.remember(content);
-      // Fire-and-forget — don't block the agent loop on memory writes
+      // Fire-and-forget - don't block the agent loop on memory writes
       this.memwal.waitForRememberJob(job.job_id).catch((err) => {
         logger.warn('MemWal remember job failed', { err });
       });
@@ -104,7 +104,7 @@ export class MemoryLayer {
     }
   }
 
-  /// Store a performance report — used to evaluate agent over time.
+  /// Store a performance report - used to evaluate agent over time.
   async rememberPerformance(report: PerformanceRecord): Promise<void> {
     if (!this.ready) return;
     try {
@@ -134,7 +134,7 @@ export class MemoryLayer {
     }
   }
 
-  /// Restore full memory namespace — useful after agent restart.
+  /// Restore full memory namespace - useful after agent restart.
   async restore(): Promise<void> {
     if (!this.ready) return;
     try {

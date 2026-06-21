@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# deploy.sh — AutoYield deployment script
+# deploy.sh - AutoYield deployment script
 # Usage: ./scripts/deploy.sh [testnet|mainnet]
 # Prerequisites: sui CLI installed, funded wallet, .env file present
 
@@ -51,7 +51,7 @@ cd "$CONTRACTS_DIR"
 # Install MVR dependencies (OpenZeppelin)
 if command -v mvr &>/dev/null; then
   echo "   Installing MVR dependencies..."
-  mvr install || echo "   ⚠️  MVR install failed — OZ deps may not resolve. Continuing..."
+  mvr install || echo "   ⚠️  MVR install failed - OZ deps may not resolve. Continuing..."
 fi
 
 PUBLISH_OUTPUT=$(sui client publish \
@@ -78,7 +78,7 @@ echo "✅ AdminCap ID:   $ADMIN_CAP_ID"
 echo ""
 echo "📖 Creating DeepBook BalanceManager..."
 
-# Commented out — requires deepbook CLI or custom PTB
+# Commented out - requires deepbook CLI or custom PTB
 # Run this manually after deployment:
 # sui client call --package 0xdee9... --module balance_manager --function create_and_share...
 echo "   ⚠️  Run scripts/setup-deepbook.ts manually after deployment (requires funded manager)"

@@ -1,4 +1,4 @@
-/// AutoYield Vault — core shared object that holds all deposited assets and manages
+/// AutoYield Vault - core shared object that holds all deposited assets and manages
 /// strategy allocations. Uses Sui's hybrid object model: Vault is shared (multi-user
 /// consensus), UserPosition is owned (parallel deposit/withdraw without conflicts).
 module autoyield::vault;
@@ -20,7 +20,7 @@ const EWithdrawExceedsPosition: u64 = 5;
 const ECooldownActive: u64 = 6;
 
 // ===== Constants =====
-const PRECISION: u64 = 1_000_000_000; // 1e9 — matches Sui coin precision
+const PRECISION: u64 = 1_000_000_000; // 1e9 - matches Sui coin precision
 const MAX_PROTOCOL_FEE_BPS: u64 = 500; // 5% max
 const MIN_REBALANCE_INTERVAL_MS: u64 = 3_600_000; // 1 hour in ms
 
@@ -32,7 +32,7 @@ public struct AdminCap has key, store {
     id: UID,
 }
 
-/// Agent capability — narrower than AdminCap, only allows rebalancing.
+/// Agent capability - narrower than AdminCap, only allows rebalancing.
 /// Transferred to the AI agent's hot wallet.
 public struct AgentCap has key, store {
     id: UID,
@@ -55,7 +55,7 @@ public struct Vault has key {
     protocol_fee_bps: u64,
     /// Fee recipient address
     fee_recipient: address,
-    /// Emergency pause flag — blocks all deposits/withdrawals/rebalances
+    /// Emergency pause flag - blocks all deposits/withdrawals/rebalances
     paused: bool,
     /// Timestamp of last rebalance (epoch ms)
     last_rebalance_ms: u64,
@@ -65,7 +65,7 @@ public struct Vault has key {
     deepbook_manager_id: Option<ID>,
 }
 
-/// Per-user position — OWNED object for parallel execution.
+/// Per-user position - OWNED object for parallel execution.
 /// Different users' positions never conflict, enabling high throughput.
 public struct UserPosition has key, store {
     id: UID,
@@ -196,7 +196,7 @@ public fun deposit<T>(
 
     // Destroy coin (in production this goes to strategy allocations via PTB)
     coin::destroy_zero(coin::split(&mut coin, 0, ctx));
-    transfer::public_transfer(coin, vault.fee_recipient); // placeholder — agent routes this
+    transfer::public_transfer(coin, vault.fee_recipient); // placeholder - agent routes this
 
     event::emit(DepositEvent {
         vault_id: object::id(vault),
@@ -289,13 +289,13 @@ public fun rebalance(
     });
 }
 
-/// Emergency circuit breaker — pauses/unpauses all vault operations.
+/// Emergency circuit breaker - pauses/unpauses all vault operations.
 public fun set_paused(vault: &mut Vault, _cap: &AdminCap, paused: bool) {
     vault.paused = paused;
     event::emit(PauseEvent { vault_id: object::id(vault), paused });
 }
 
-/// Update protocol fee — capped at MAX_PROTOCOL_FEE_BPS.
+/// Update protocol fee - capped at MAX_PROTOCOL_FEE_BPS.
 public fun set_fee(vault: &mut Vault, _cap: &AdminCap, fee_bps: u64) {
     assert!(fee_bps <= MAX_PROTOCOL_FEE_BPS, EInvalidAllocation);
     vault.protocol_fee_bps = fee_bps;
@@ -306,7 +306,7 @@ public fun set_deepbook_manager(vault: &mut Vault, _cap: &AdminCap, manager_id: 
     vault.deepbook_manager_id = option::some(manager_id);
 }
 
-/// Mint an AgentCap tied to this vault — given to the AI agent's signing key.
+/// Mint an AgentCap tied to this vault - given to the AI agent's signing key.
 public fun mint_agent_cap(
     vault: &Vault,
     _cap: &AdminCap,

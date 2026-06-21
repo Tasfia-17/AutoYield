@@ -1,4 +1,4 @@
-// AutoYield Agent — shared type definitions
+// AutoYield Agent - shared type definitions
 
 export interface ProtocolData {
   scallop: ScallopData;
@@ -74,7 +74,7 @@ export interface VaultState {
   lastRebalanceMs: number;
 }
 
-// AI decision output — validated by Zod schema
+// AI decision output - validated by Zod schema
 export interface RebalanceDecision {
   targetScallopBps: number;
   targetDeepbookBps: number;

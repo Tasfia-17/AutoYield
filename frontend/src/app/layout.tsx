@@ -3,11 +3,11 @@ import './globals.css';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: 'AutoYield — AI DeFi Treasury on Sui',
+  title: 'AutoYield - AI DeFi Treasury on Sui',
   description:
     'Autonomous yield optimization across Scallop, DeepBook & Cetus. Set it and forget it.',
   openGraph: {
-    title: 'AutoYield — AI DeFi Treasury on Sui',
+    title: 'AutoYield - AI DeFi Treasury on Sui',
     description: 'AI-managed DeFi treasury on Sui. Sign in with Google. No wallet needed.',
     images: [{ url: '/og.png.svg', width: 1200, height: 630 }],
     type: 'website',

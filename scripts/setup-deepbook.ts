@@ -1,4 +1,4 @@
-/// setup-deepbook.ts — Creates a DeepBook BalanceManager and mints TradeCap for the agent.
+/// setup-deepbook.ts - Creates a DeepBook BalanceManager and mints TradeCap for the agent.
 /// Run after deploy.sh: pnpm tsx scripts/setup-deepbook.ts
 import 'dotenv/config';
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';

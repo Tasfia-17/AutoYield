@@ -1,4 +1,4 @@
-/// StrategyRegistry — tracks active protocol integrations and their metadata.
+/// StrategyRegistry - tracks active protocol integrations and their metadata.
 /// Each strategy is independently upgradeable without touching the core vault.
 module autoyield::strategy_registry;
 
@@ -29,7 +29,7 @@ public struct StrategyConfig has store, drop {
     last_harvest_ms: u64,
 }
 
-/// Shared registry — stores strategy configs keyed by protocol name.
+/// Shared registry - stores strategy configs keyed by protocol name.
 public struct StrategyRegistry has key {
     id: UID,
     strategies: vector<StrategyConfig>,

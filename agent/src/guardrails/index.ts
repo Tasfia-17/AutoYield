@@ -1,4 +1,4 @@
-/// Guardrails Layer — deterministic safety checks that override ALL AI decisions.
+/// Guardrails Layer - deterministic safety checks that override ALL AI decisions.
 /// This layer is NEVER bypassed. It mirrors the on-chain security.move logic.
 /// Off-chain guardrails run BEFORE building the PTB, on-chain guardrails run AFTER.
 import type { RebalanceDecision, VaultState, GuardrailResult } from '../types/index.js';
@@ -38,7 +38,7 @@ export class GuardrailsLayer {
   ): GuardrailResult {
     // 1. Vault circuit breaker
     if (vault.paused) {
-      return this.reject('Vault is paused — emergency mode active');
+      return this.reject('Vault is paused - emergency mode active');
     }
 
     // 2. AI confidence gate
@@ -57,7 +57,7 @@ export class GuardrailsLayer {
       return this.reject(`Allocations sum to ${sum} bps, must equal 10000`);
     }
 
-    // 5. Concentration cap — no single protocol > 60%
+    // 5. Concentration cap - no single protocol > 60%
     if (decision.targetScallopBps > MAX_SINGLE_PROTOCOL_BPS) {
       return this.reject(`Scallop allocation ${decision.targetScallopBps} bps exceeds 60% cap`);
     }
@@ -68,7 +68,7 @@ export class GuardrailsLayer {
       return this.reject(`Cetus allocation ${decision.targetCetusBps} bps exceeds 60% cap`);
     }
 
-    // 6. Max shift per rebalance — prevents abrupt portfolio swings
+    // 6. Max shift per rebalance - prevents abrupt portfolio swings
     const scallopShift = Math.abs(vault.scallopBps - decision.targetScallopBps);
     const deepbookShift = Math.abs(vault.deepbookBps - decision.targetDeepbookBps);
     const cetusShift = Math.abs(vault.cetusBps - decision.targetCetusBps);
@@ -82,10 +82,10 @@ export class GuardrailsLayer {
       return this.reject(`Cetus shift ${cetusShift} bps exceeds 30% max`);
     }
 
-    // 7. Cooldown — min 1 hour between rebalances (matches on-chain)
+    // 7. Cooldown - min 1 hour between rebalances (matches on-chain)
     if (nowMs < vault.lastRebalanceMs + MIN_REBALANCE_INTERVAL_MS) {
       const remaining = Math.ceil((vault.lastRebalanceMs + MIN_REBALANCE_INTERVAL_MS - nowMs) / 60000);
-      return this.reject(`Cooldown active — ${remaining} min remaining`);
+      return this.reject(`Cooldown active - ${remaining} min remaining`);
     }
 
     // 8. Daily limit
@@ -110,7 +110,7 @@ export class GuardrailsLayer {
       }
     }
 
-    // All checks passed — update state
+    // All checks passed - update state
     this.state.dailyRebalanceCount++;
     this.state.lastRebalanceMs = nowMs;
 

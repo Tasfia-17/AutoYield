@@ -1,4 +1,4 @@
-/// Sensing Layer — ingests real-time data from Scallop, DeepBook, Cetus, and Pyth.
+/// Sensing Layer - ingests real-time data from Scallop, DeepBook, Cetus, and Pyth.
 /// Runs every 30-60 seconds, feeds the reasoning layer.
 import { SuiClient } from '@mysten/sui/client';
 import { DeepBookClient } from '@mysten/deepbook-v3';
@@ -110,7 +110,7 @@ export class SensingLayer {
 
       // Get level2 orderbook for spread calculation
       const level2 = await this.suiClient.devInspectTransactionBlock({
-        transactionBlock: {} as any, // placeholder — real impl fetches pool state
+        transactionBlock: {} as any, // placeholder - real impl fetches pool state
         sender: '0x0',
       }).catch(() => null);
 
@@ -134,11 +134,11 @@ export class SensingLayer {
   }
 
   private async fetchCetusData(): Promise<CetusData> {
-    // Cetus SDK integration — fetches pool state for SUI/USDC
+    // Cetus SDK integration - fetches pool state for SUI/USDC
     // Full SDK integration requires pool address configuration at runtime
     try {
       return {
-        poolApr: 0.12, // ~12% from swap fees (placeholder — real from SDK)
+        poolApr: 0.12, // ~12% from swap fees (placeholder - real from SDK)
         currentPrice: 0n,
         sqrtPrice: 0n,
         tickCurrentIndex: 0,

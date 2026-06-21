@@ -1,4 +1,4 @@
-/// AutoYield Scallop Strategy — interfaces with Scallop lending protocol.
+/// AutoYield Scallop Strategy - interfaces with Scallop lending protocol.
 /// Deposits vault assets for supply APY, returns sCoin receipts.
 /// Scallop only supports mainnet, package IDs are mainnet addresses.
 module autoyield::strategy_scallop;
@@ -42,7 +42,7 @@ public struct ScallopApySnapshot has copy, drop {
 // ===== Strategy interface (called from PTB) =====
 
 /// Record a Scallop deposit event. The actual deposit happens off-chain via
-/// the Scallop SDK PTB builder — this entry records it on-chain for MemWal audit.
+/// the Scallop SDK PTB builder - this entry records it on-chain for MemWal audit.
 public fun record_deposit(
     vault_id: ID,
     amount: u64,

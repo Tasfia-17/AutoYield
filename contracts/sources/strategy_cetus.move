@@ -1,4 +1,4 @@
-/// AutoYield Cetus Strategy — concentrated liquidity provision.
+/// AutoYield Cetus Strategy - concentrated liquidity provision.
 /// Manages CLMM positions for swap fee collection.
 /// IL is monitored; agent withdraws when IL exceeds threshold.
 module autoyield::strategy_cetus;
@@ -40,7 +40,7 @@ public struct CetusLiquidityAdded has copy, drop {
     timestamp_ms: u64,
 }
 
-/// IL monitoring event — emitted when IL exceeds agent threshold
+/// IL monitoring event - emitted when IL exceeds agent threshold
 public struct ImpermanentLossAlert has copy, drop {
     vault_id: ID,
     position_id: ID,

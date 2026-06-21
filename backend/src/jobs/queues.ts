@@ -49,7 +49,7 @@ new Worker('rebalance-record', async (job) => {
   );
 }, { connection });
 
-// Processes gas station requests — validates and rate-limits
+// Processes gas station requests - validates and rate-limits
 new Worker('gas-station', async (job) => {
   const { userAddress, txKind } = job.data;
   const MAX_DAILY_SPONSORED = 10;

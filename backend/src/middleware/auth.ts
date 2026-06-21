@@ -1,4 +1,4 @@
-/// zkLogin JWT middleware — verifies Sui zkLogin proofs.
+/// zkLogin JWT middleware - verifies Sui zkLogin proofs.
 /// Extracts sui_address from verified JWT and attaches to req.user.
 import type { Request, Response, NextFunction } from 'express';
 import { jwtToAddress } from '@mysten/zklogin';
@@ -15,7 +15,7 @@ export function zkLoginAuth(req: AuthedRequest, res: Response, next: NextFunctio
   }
 
   try {
-    // Decode JWT to extract sub and iss claims (no signature check needed here —
+    // Decode JWT to extract sub and iss claims (no signature check needed here -
     // zkLogin proofs are verified on-chain; this just extracts the address)
     const [, payloadB64] = token.split('.');
     const payload = JSON.parse(Buffer.from(payloadB64!, 'base64url').toString());

@@ -1,4 +1,4 @@
-/// Gas station — sponsors user transactions so users never pay gas.
+/// Gas station - sponsors user transactions so users never pay gas.
 /// Co-signs transactions with the sponsor keypair after validation.
 import { Router } from 'express';
 import { z } from 'zod';
@@ -17,7 +17,7 @@ const sponsorKeypair = Ed25519Keypair.fromSecretKey(
   Buffer.from(process.env.GAS_SPONSOR_PRIVATE_KEY!, 'hex'),
 );
 
-// POST /api/gas/sponsor — accepts serialized tx, validates, attaches gas + signature
+// POST /api/gas/sponsor - accepts serialized tx, validates, attaches gas + signature
 gasRouter.post('/sponsor', async (req, res) => {
   const schema = z.object({
     userAddress: z.string().min(60),

@@ -1,4 +1,4 @@
-/// AutoYield DeepBook Strategy — places limit orders to earn maker fees.
+/// AutoYield DeepBook Strategy - places limit orders to earn maker fees.
 /// Uses DeepBook V3 BalanceManager pattern. Agent holds TradeCap for
 /// autonomous order management without equivocation risk.
 module autoyield::strategy_deepbook;

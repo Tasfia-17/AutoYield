@@ -96,7 +96,7 @@ fun test_guardian_rejects_invalid_allocation() {
     {
         let vault_id = object::id_from_address(@0x1);
         let mut g = security::create_guardian(vault_id, 2000, ts::ctx(&mut scenario));
-        // This should NOT abort — valid rebalance
+        // This should NOT abort - valid rebalance
         security::validate_rebalance(
             &mut g,
             vault_id,
@@ -121,7 +121,7 @@ fun test_guardian_rejects_bad_sum() {
         security::validate_rebalance(
             &mut g, vault_id, 100_000,
             5000, 3000, 2000,
-            5000, 3000, 3000, // sum = 11000 — invalid
+            5000, 3000, 3000, // sum = 11000 - invalid
             8000, 100, 1000,
         );
         transfer::public_transfer(g, ADMIN);
@@ -140,7 +140,7 @@ fun test_guardian_rejects_low_confidence() {
             &mut g, vault_id, 100_000,
             5000, 3000, 2000,
             4500, 3500, 2000,
-            5000, // 50% confidence — below 70% threshold
+            5000, // 50% confidence - below 70% threshold
             100, 1000,
         );
         transfer::public_transfer(g, ADMIN);

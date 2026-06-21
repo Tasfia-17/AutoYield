@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS users (
   id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   sui_address    TEXT NOT NULL UNIQUE,
-  -- zkLogin sub (Google OAuth subject) — hashed for privacy
+  -- zkLogin sub (Google OAuth subject) - hashed for privacy
   oauth_sub_hash TEXT UNIQUE,
   risk_tier      TEXT NOT NULL DEFAULT 'moderate' CHECK (risk_tier IN ('conservative','moderate','aggressive')),
   position_id    TEXT,           -- on-chain UserPosition object ID

@@ -12,7 +12,7 @@ const suiClient = new SuiClient({
 });
 const VAULT_ID = process.env.VAULT_ID!;
 
-// GET /api/vault — current vault state from chain
+// GET /api/vault - current vault state from chain
 vaultRouter.get('/', async (_req, res) => {
   try {
     const obj = await suiClient.getObject({
@@ -55,7 +55,7 @@ vaultRouter.get('/', async (_req, res) => {
   }
 });
 
-// GET /api/vault/history — rebalance history
+// GET /api/vault/history - rebalance history
 vaultRouter.get('/history', async (req, res) => {
   const limit = Math.min(Number(req.query.limit ?? 20), 100);
   const offset = Number(req.query.offset ?? 0);
@@ -70,7 +70,7 @@ vaultRouter.get('/history', async (req, res) => {
   }
 });
 
-// GET /api/vault/snapshots — time-series market data
+// GET /api/vault/snapshots - time-series market data
 vaultRouter.get('/snapshots', async (req, res) => {
   const hours = Math.min(Number(req.query.hours ?? 24), 168); // max 7 days
   try {
@@ -83,7 +83,7 @@ vaultRouter.get('/snapshots', async (req, res) => {
   }
 });
 
-// POST /api/vault/snapshot — agent posts fresh market data
+// POST /api/vault/snapshot - agent posts fresh market data
 vaultRouter.post('/snapshot', async (req, res) => {
   const schema = z.object({
     scallopApy: z.number(),
@@ -102,7 +102,7 @@ vaultRouter.post('/snapshot', async (req, res) => {
   res.json({ queued: true });
 });
 
-// POST /api/vault/rebalance — agent posts executed rebalance
+// POST /api/vault/rebalance - agent posts executed rebalance
 vaultRouter.post('/rebalance', async (req, res) => {
   const schema = z.object({
     txDigest: z.string(),

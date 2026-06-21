@@ -1,4 +1,4 @@
-/// AutoYield Agent — main orchestration loop.
+/// AutoYield Agent - main orchestration loop.
 /// Flow: Sense → Recall Memory → Reason → Guardrails → Simulate → Execute → Remember
 import 'dotenv/config';
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
@@ -65,7 +65,7 @@ async function main() {
     process.env.MEMWAL_ACCOUNT_ID!,
   );
 
-  logger.info('All clients initialized — starting agent loop');
+  logger.info('All clients initialized - starting agent loop');
 
   // ── Agent loop ──
   while (true) {
@@ -94,7 +94,7 @@ async function runCycle(
   ]);
 
   if (vault.paused) {
-    logger.warn('Vault paused — skipping cycle');
+    logger.warn('Vault paused - skipping cycle');
     return;
   }
 
@@ -111,7 +111,7 @@ async function runCycle(
     return;
   }
 
-  // 4. GUARDRAILS: deterministic override — rejects if any rule fails
+  // 4. GUARDRAILS: deterministic override - rejects if any rule fails
   const check = guardrails.validate(decision, vault);
   if (!check.approved) {
     logger.warn('Guardrails rejected decision', { reason: check.rejectionReason });

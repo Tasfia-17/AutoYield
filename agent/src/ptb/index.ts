@@ -1,4 +1,4 @@
-/// PTB Builder — constructs atomic Programmable Transaction Blocks.
+/// PTB Builder - constructs atomic Programmable Transaction Blocks.
 /// Rebalance, deposit, and withdrawal all happen in single atomic PTBs.
 /// Simulates with devInspect before live submission.
 import { Transaction } from '@mysten/sui/transactions';
@@ -91,7 +91,7 @@ export class PtbBuilder {
   /// 6. Add Cetus liquidity if increasing allocation
   /// 7. Call vault::rebalance() to update on-chain state
   /// 8. Emit audit events for MemWal
-  /// ALL in one atomic PTB — if any step fails, all revert.
+  /// ALL in one atomic PTB - if any step fails, all revert.
   private async buildRebalanceTx(
     decision: RebalanceDecision,
     vault: VaultState,
@@ -99,7 +99,7 @@ export class PtbBuilder {
     const tx = new Transaction();
 
     // === Step 7: Update vault allocation state ===
-    // This is the core on-chain state update — the actual fund movements
+    // This is the core on-chain state update - the actual fund movements
     // are tracked off-chain and reconciled. Full protocol PTB composability
     // would call Scallop/DeepBook/Cetus entry functions in same tx.
     tx.moveCall({
@@ -159,7 +159,7 @@ export class PtbBuilder {
     return tx;
   }
 
-  /// Build withdrawal PTB — may need to pull from multiple protocols.
+  /// Build withdrawal PTB - may need to pull from multiple protocols.
   /// If insufficient idle balance: pull from Scallop + cancel DeepBook + remove Cetus liquidity.
   async buildWithdrawTx(
     userAddress: string,
@@ -169,7 +169,7 @@ export class PtbBuilder {
     const tx = new Transaction();
     tx.setSender(userAddress);
 
-    // Call vault::withdraw — returns net asset amount
+    // Call vault::withdraw - returns net asset amount
     const [_netAmount] = tx.moveCall({
       target: `${AUTOYIELD_PKG}::vault::withdraw`,
       typeArguments: ['0x2::sui::SUI'],

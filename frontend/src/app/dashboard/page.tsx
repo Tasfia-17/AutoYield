@@ -26,8 +26,8 @@ const MOCK_APY_HISTORY = Array.from({ length: 24 }, (_, i) => ({
 }));
 
 const MOCK_HISTORY = [
-  { id: 1, executed_at: '2026-06-21T11:30:00Z', scallop_bps_after: 4500, deepbook_bps_after: 3500, cetus_bps_after: 2000, confidence_score: 0.87, reasoning: 'DeepBook maker rebates surged on high SUI volatility — shifted 5% from Scallop.', gas_cost_mist: 8_200_000 },
-  { id: 2, executed_at: '2026-06-21T08:15:00Z', scallop_bps_after: 5000, deepbook_bps_after: 3000, cetus_bps_after: 2000, confidence_score: 0.82, reasoning: 'Scallop utilization rose to 78% — supply APY improving. Increased allocation.', gas_cost_mist: 7_400_000 },
+  { id: 1, executed_at: '2026-06-21T11:30:00Z', scallop_bps_after: 4500, deepbook_bps_after: 3500, cetus_bps_after: 2000, confidence_score: 0.87, reasoning: 'DeepBook maker rebates surged on high SUI volatility - shifted 5% from Scallop.', gas_cost_mist: 8_200_000 },
+  { id: 2, executed_at: '2026-06-21T08:15:00Z', scallop_bps_after: 5000, deepbook_bps_after: 3000, cetus_bps_after: 2000, confidence_score: 0.82, reasoning: 'Scallop utilization rose to 78% - supply APY improving. Increased allocation.', gas_cost_mist: 7_400_000 },
   { id: 3, executed_at: '2026-06-21T05:00:00Z', scallop_bps_after: 5500, deepbook_bps_after: 2500, cetus_bps_after: 2000, confidence_score: 0.79, reasoning: 'Cetus IL risk elevated after SUI -8% move. Reduced Cetus, moved to Scallop.', gas_cost_mist: 9_100_000 },
 ];
 
@@ -119,7 +119,7 @@ function DepositModal({ onClose }: { onClose: () => void }) {
           <>
             <h2 className="font-display text-3xl text-ink mb-6 text-center">💸 Deposit USDC</h2>
             <div className="mb-5">
-              <label className="text-sm font-semibold text-ink/70 mb-2 block">Amount — ${amount} USDC</label>
+              <label className="text-sm font-semibold text-ink/70 mb-2 block">Amount - ${amount} USDC</label>
               <input
                 type="range" min="100" max="10000" step="100" value={amount}
                 onChange={(e) => setAmount(e.target.value)}
@@ -173,7 +173,7 @@ export default function Dashboard() {
   const [showChat, setShowChat] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'history' | 'agent'>('overview');
 
-  // Live vault data — falls back to mock for demo
+  // Live vault data - falls back to mock for demo
   const { data: vaultData } = useQuery({
     queryKey: ['vault'],
     queryFn: fetchVaultState,
@@ -264,7 +264,7 @@ export default function Dashboard() {
 
                 {/* APY chart */}
                 <div className="lg:col-span-2 glass rounded-2xl p-6">
-                  <h3 className="font-display text-xl text-ink mb-4">Protocol APY — 24h</h3>
+                  <h3 className="font-display text-xl text-ink mb-4">Protocol APY - 24h</h3>
                   <ResponsiveContainer width="100%" height={220}>
                     <AreaChart data={MOCK_APY_HISTORY}>
                       <defs>
@@ -319,7 +319,7 @@ export default function Dashboard() {
 
               {/* TVL chart */}
               <div className="glass rounded-2xl p-6 mt-6">
-                <h3 className="font-display text-xl text-ink mb-4">Vault TVL — 24h</h3>
+                <h3 className="font-display text-xl text-ink mb-4">Vault TVL - 24h</h3>
                 <ResponsiveContainer width="100%" height={180}>
                   <AreaChart data={MOCK_TVL_HISTORY}>
                     <defs>
@@ -349,7 +349,7 @@ export default function Dashboard() {
                     <div className="text-2xl animate-breathe">🤖</div>
                     <div>
                       <div className="text-xs text-amber-600 font-semibold mb-0.5">
-                        Latest AI Decision — {timeAgo(MOCK_HISTORY[0].executed_at)} · Confidence {(MOCK_HISTORY[0].confidence_score * 100).toFixed(0)}%
+                        Latest AI Decision - {timeAgo(MOCK_HISTORY[0].executed_at)} · Confidence {(MOCK_HISTORY[0].confidence_score * 100).toFixed(0)}%
                       </div>
                       <p className="text-sm text-ink/80">{MOCK_HISTORY[0].reasoning}</p>
                     </div>

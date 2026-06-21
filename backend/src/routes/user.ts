@@ -5,7 +5,7 @@ import { zkLoginAuth, type AuthedRequest } from '../middleware/auth.ts';
 
 export const userRouter = Router();
 
-// POST /api/user/register — create user after zkLogin
+// POST /api/user/register - create user after zkLogin
 userRouter.post('/register', async (req, res) => {
   const schema = z.object({
     suiAddress: z.string().min(60),
@@ -31,7 +31,7 @@ userRouter.post('/register', async (req, res) => {
   }
 });
 
-// GET /api/user/me — current user
+// GET /api/user/me - current user
 userRouter.get('/me', zkLoginAuth, async (req: AuthedRequest, res) => {
   try {
     const result = await db.query(
@@ -48,7 +48,7 @@ userRouter.get('/me', zkLoginAuth, async (req: AuthedRequest, res) => {
   }
 });
 
-// PUT /api/user/preferences — update risk tier + position
+// PUT /api/user/preferences - update risk tier + position
 userRouter.put('/preferences', zkLoginAuth, async (req: AuthedRequest, res) => {
   const schema = z.object({
     riskTier: z.enum(['conservative', 'moderate', 'aggressive']).optional(),

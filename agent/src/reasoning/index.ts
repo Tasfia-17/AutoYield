@@ -1,4 +1,4 @@
-/// Reasoning Layer — GPT-4o strategy engine.
+/// Reasoning Layer - GPT-4o strategy engine.
 /// Temperature 0.1 for deterministic financial decisions.
 /// All output validated with Zod before passing to guardrails.
 import OpenAI from 'openai';
@@ -6,7 +6,7 @@ import { z } from 'zod';
 import type { ProtocolData, RebalanceDecision, VaultState, RiskTier } from '../types/index.js';
 import { logger } from '../utils/logger.js';
 
-// Strict output schema — guardrails rely on this being valid
+// Strict output schema - guardrails rely on this being valid
 const DecisionSchema = z.object({
   targetScallopBps: z.number().int().min(0).max(10000),
   targetDeepbookBps: z.number().int().min(0).max(10000),
@@ -126,14 +126,14 @@ Only recommend shouldRebalance=true if expected improvement > 0.5% APY.
       targetCetusBps: vault.cetusBps,
       confidenceScore: 0,
       expectedImprovementBps: 0,
-      reasoning: `No action — ${reason}`,
+      reasoning: `No action - ${reason}`,
       riskFactors: [reason],
       shouldRebalance: false,
     };
   }
 }
 
-const SYSTEM_PROMPT = `You are AutoYield's strategy engine — a precise, risk-aware DeFi portfolio optimizer on Sui.
+const SYSTEM_PROMPT = `You are AutoYield's strategy engine - a precise, risk-aware DeFi portfolio optimizer on Sui.
 
 Your role is NOT to make predictions. Your role is to:
 1. Read quantitative yield data across Scallop (lending), DeepBook (maker fees), and Cetus (AMM fees)
