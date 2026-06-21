@@ -1,0 +1,12 @@
+[package]
+name = "autoyield"
+edition = "2024.beta"
+version = "0.1.0"
+
+[dependencies]
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
+openzeppelin_math = { r.mvr = "@openzeppelin-move/integer-math" }
+openzeppelin_access = { r.mvr = "@openzeppelin-move/access" }
+
+[addresses]
+autoyield = "0x0"

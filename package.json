@@ -1,0 +1,13 @@
+{
+  "name": "autoyield",
+  "private": true,
+  "workspaces": ["agent", "backend", "frontend"],
+  "scripts": {
+    "dev:agent": "pnpm --filter agent dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "build": "pnpm --filter agent build && pnpm --filter backend build && pnpm --filter frontend build",
+    "test": "pnpm --filter agent test && pnpm --filter backend test"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
