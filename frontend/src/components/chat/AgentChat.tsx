@@ -25,7 +25,9 @@ export function AgentChat() {
     {
       id: 0,
       role: 'agent',
-      text: "👋 Hey! I'm the AutoYield AI agent. I'm actively managing your vault across Scallop, DeepBook, and Cetus. Ask me anything about your portfolio, my decisions, or the current market conditions.",
+      text: process.env.NEXT_PUBLIC_API_URL
+        ? "👋 Hey! I'm the AutoYield AI agent. Ask me anything about the vault, allocations, or Sui DeFi strategies."
+        : "👋 I'm the AutoYield AI agent. The backend API is not connected yet — set NEXT_PUBLIC_API_URL to enable live AI chat. You can still explore the vault dashboard.",
       ts: new Date(),
     },
   ]);
