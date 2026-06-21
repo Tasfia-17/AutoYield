@@ -182,7 +182,7 @@ export default function Dashboard() {
   });
 
   const vault = vaultData ?? {
-    totalAssets: 2_400_000_000_000n,
+    totalAssets: 2_400_000_000_000,
     allocations: { scallopBps: 5000, deepbookBps: 3000, cetusBps: 2000 },
     blendedApy: 11.8,
     paused: false,
@@ -191,7 +191,7 @@ export default function Dashboard() {
 
   const allocations = vault.allocations ?? { scallopBps: 5000, deepbookBps: 3000, cetusBps: 2000 };
   const blendedApy = vault.blendedApy ?? 11.8;
-  const totalUsd = Number(vault.totalAssets ?? 2_400_000_000_000n) / 1e6;
+  const totalUsd = Number(vault.totalAssets ?? 2_400_000_000_000) / 1e6;
 
   const userShares = 1000; // mock
   const userValueUsd = 1_053.40; // mock
