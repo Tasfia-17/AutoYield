@@ -13,7 +13,7 @@
     "@mysten/sui": "^1.38.0",
     "@mysten/deepbook-v3": "^0.15.0",
     "@scallop-io/sui-scallop-sdk": "^0.50.0",
-    "@cetusprotocol/cetus-sui-clmm-sdk": "^7.0.0",
+    "@cetusprotocol/cetus-sui-clmm-sdk": "^5.4.0",
     "@pythnetwork/pyth-sui-js": "^1.0.0",
     "@mysten-incubation/memwal": "^0.5.0",
     "openai": "^4.77.0",
