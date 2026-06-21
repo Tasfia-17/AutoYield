@@ -286,6 +286,19 @@ autoyield/
 
 <br/>
 
+## Contract Addresses (Testnet)
+
+| Contract | Object ID |
+|----------|-----------|
+| Package | `0xf3ea5bf8ce40a063fb95b17fb4d28770033c2e3895c72826bc0e85cab7401228` |
+| Vault | `0x029c9ecb485714213476e98cee993f5afc6b32be0b6d10001144163f90bb962e` |
+| AdminCap | `0xfb3f95d0b8b6af0c09b50bd5c734ab217a988f8a7097c37fca5141a20131ec9d` |
+| StrategyRegistry | `0x443f7d3c1a4d85d70b1021056aab9760587731411744b38ffaa77b97eeb171a9` |
+
+Verify on [Sui Testnet Explorer](https://testnet.suivision.xyz/object/0x029c9ecb485714213476e98cee993f5afc6b32be0b6d10001144163f90bb962e)
+
+<br/>
+
 ## Running AutoYield
 
 ### Option 1: Frontend Demo (2 minutes, no infra needed)

@@ -1,14 +1,7 @@
-/// AutoYield Vault - core shared object that holds all deposited assets and manages
-/// strategy allocations. Uses Sui's hybrid object model: Vault is shared (multi-user
-/// consensus), UserPosition is owned (parallel deposit/withdraw without conflicts).
 module autoyield::vault;
 
-use sui::balance::{Self, Balance};
 use sui::coin::{Self, Coin};
 use sui::event;
-use sui::sui::SUI;
-use openzeppelin_math::u64::{mul_div};
-use openzeppelin_math::rounding;
 
 // ===== Error codes =====
 const ENotAuthorized: u64 = 0;
@@ -20,66 +13,49 @@ const EWithdrawExceedsPosition: u64 = 5;
 const ECooldownActive: u64 = 6;
 
 // ===== Constants =====
-const PRECISION: u64 = 1_000_000_000; // 1e9 - matches Sui coin precision
-const MAX_PROTOCOL_FEE_BPS: u64 = 500; // 5% max
-const MIN_REBALANCE_INTERVAL_MS: u64 = 3_600_000; // 1 hour in ms
+const PRECISION: u64 = 1_000_000_000;
+const MAX_PROTOCOL_FEE_BPS: u64 = 500;
+const MIN_REBALANCE_INTERVAL_MS: u64 = 3_600_000;
+
+// ===== Inline math =====
+// Computes floor(a * b / c) safely. Aborts on divide-by-zero.
+fun mul_div_down(a: u64, b: u64, c: u64): u64 {
+    assert!(c > 0, EInvalidAllocation);
+    ((a as u128) * (b as u128) / (c as u128)) as u64
+}
 
 // ===== Core structs =====
 
-/// Capability to administer the vault (pause, rebalance, upgrade strategies).
-/// Owned by the protocol deployer. Can be transferred to multi-sig.
-public struct AdminCap has key, store {
-    id: UID,
-}
+public struct AdminCap has key, store { id: UID }
 
-/// Agent capability - narrower than AdminCap, only allows rebalancing.
-/// Transferred to the AI agent's hot wallet.
 public struct AgentCap has key, store {
     id: UID,
     vault_id: ID,
 }
 
-/// The main vault shared object. Holds assets across all strategies.
-/// Shared so multiple users can deposit/withdraw concurrently.
 public struct Vault has key {
     id: UID,
-    /// Total assets under management in base units
     total_assets: u64,
-    /// Total vault shares outstanding
     total_shares: u64,
-    /// Current strategy allocations in basis points (must sum to 10_000)
     scallop_bps: u64,
     deepbook_bps: u64,
     cetus_bps: u64,
-    /// Protocol fee in basis points (e.g. 100 = 1%)
     protocol_fee_bps: u64,
-    /// Fee recipient address
     fee_recipient: address,
-    /// Emergency pause flag - blocks all deposits/withdrawals/rebalances
     paused: bool,
-    /// Timestamp of last rebalance (epoch ms)
     last_rebalance_ms: u64,
-    /// Accumulated uncollected fees in USDC (base units)
     pending_fees: u64,
-    /// DeepBook balance manager ID stored on-chain for agent reference
     deepbook_manager_id: Option<ID>,
 }
 
-/// Per-user position - OWNED object for parallel execution.
-/// Different users' positions never conflict, enabling high throughput.
 public struct UserPosition has key, store {
     id: UID,
     vault_id: ID,
     owner: address,
-    /// Shares held by this user
     shares: u64,
-    /// Cost basis in USDC base units (for P&L calculation)
     cost_basis: u64,
-    /// Deposit history count
     deposit_count: u64,
-    /// Timestamp of last action (epoch ms)
     last_action_ms: u64,
-    /// Risk tier: 0=Conservative, 1=Moderate, 2=Aggressive
     risk_tier: u8,
 }
 
@@ -125,10 +101,10 @@ fun init(ctx: &mut TxContext) {
         id: object::new(ctx),
         total_assets: 0,
         total_shares: 0,
-        scallop_bps: 5000,   // 50% Scallop
-        deepbook_bps: 3000,  // 30% DeepBook
-        cetus_bps: 2000,     // 20% Cetus
-        protocol_fee_bps: 100, // 1%
+        scallop_bps: 5000,
+        deepbook_bps: 3000,
+        cetus_bps: 2000,
+        protocol_fee_bps: 100,
         fee_recipient: ctx.sender(),
         paused: false,
         last_rebalance_ms: 0,
@@ -139,14 +115,9 @@ fun init(ctx: &mut TxContext) {
     transfer::transfer(admin_cap, ctx.sender());
 }
 
-// ===== User-facing functions =====
+// ===== User functions =====
 
-/// Create a new UserPosition for the calling address.
-public fun create_position(
-    vault: &Vault,
-    risk_tier: u8,
-    ctx: &mut TxContext,
-): UserPosition {
+public fun create_position(vault: &Vault, risk_tier: u8, ctx: &mut TxContext): UserPosition {
     assert!(risk_tier <= 2, EInvalidAllocation);
     UserPosition {
         id: object::new(ctx),
@@ -160,8 +131,6 @@ public fun create_position(
     }
 }
 
-/// Deposit USDC (or any coin T) into the vault, mint shares to UserPosition.
-/// Uses OpenZeppelin mul_div for precision: shares = amount * total_shares / total_assets
 public fun deposit<T>(
     vault: &mut Vault,
     position: &mut UserPosition,
@@ -176,27 +145,21 @@ public fun deposit<T>(
     let amount = coin.value();
     assert!(amount > 0, EZeroAmount);
 
-    // Calculate shares to mint using OZ mul_div to avoid precision loss
     let shares_minted = if (vault.total_shares == 0 || vault.total_assets == 0) {
-        amount // 1:1 for first deposit
+        amount
     } else {
-        let result = mul_div(amount, vault.total_shares, vault.total_assets, rounding::down());
-        result.destroy_some()
+        mul_div_down(amount, vault.total_shares, vault.total_assets)
     };
 
-    // Update vault state
     vault.total_assets = vault.total_assets + amount;
     vault.total_shares = vault.total_shares + shares_minted;
-
-    // Update position
     position.shares = position.shares + shares_minted;
     position.cost_basis = position.cost_basis + amount;
     position.deposit_count = position.deposit_count + 1;
     position.last_action_ms = clock_ms;
 
-    // Destroy coin (in production this goes to strategy allocations via PTB)
-    coin::destroy_zero(coin::split(&mut coin, 0, ctx));
-    transfer::public_transfer(coin, vault.fee_recipient); // placeholder - agent routes this
+    // Transfer coin to fee_recipient as placeholder (agent routes via PTB in production)
+    transfer::public_transfer(coin, vault.fee_recipient);
 
     event::emit(DepositEvent {
         vault_id: object::id(vault),
@@ -209,7 +172,6 @@ public fun deposit<T>(
     shares_minted
 }
 
-/// Withdraw from vault by burning shares, returns asset amount.
 public fun withdraw<T>(
     vault: &mut Vault,
     position: &mut UserPosition,
@@ -223,13 +185,8 @@ public fun withdraw<T>(
     assert!(position.shares >= shares_to_burn, EWithdrawExceedsPosition);
     assert!(shares_to_burn > 0, EZeroAmount);
 
-    // Calculate asset amount: amount = shares * total_assets / total_shares
-    let result = mul_div(shares_to_burn, vault.total_assets, vault.total_shares, rounding::down());
-    let amount = result.destroy_some();
-
-    // Deduct protocol fee
-    let fee_result = mul_div(amount, vault.protocol_fee_bps, 10000, rounding::down());
-    let fee = fee_result.destroy_some();
+    let amount = mul_div_down(shares_to_burn, vault.total_assets, vault.total_shares);
+    let fee = mul_div_down(amount, vault.protocol_fee_bps, 10000);
     let net_amount = amount - fee;
 
     vault.pending_fees = vault.pending_fees + fee;
@@ -251,8 +208,6 @@ public fun withdraw<T>(
 
 // ===== Agent/Admin functions =====
 
-/// Update strategy allocations. Called by agent after AI decision + guardrails approval.
-/// Enforces: allocations sum to 10000 bps, min cooldown between rebalances.
 public fun rebalance(
     vault: &mut Vault,
     _cap: &AgentCap,
@@ -265,13 +220,11 @@ public fun rebalance(
     assert!(!vault.paused, EVaultPaused);
     assert!(_cap.vault_id == object::id(vault), ENotAuthorized);
     assert!(scallop_bps + deepbook_bps + cetus_bps == 10000, EInvalidAllocation);
-    assert!(
-        clock_ms >= vault.last_rebalance_ms + MIN_REBALANCE_INTERVAL_MS,
-        ECooldownActive
-    );
+    assert!(clock_ms >= vault.last_rebalance_ms + MIN_REBALANCE_INTERVAL_MS, ECooldownActive);
 
-    let old = (vault.scallop_bps, vault.deepbook_bps, vault.cetus_bps);
-
+    let old_scallop = vault.scallop_bps;
+    let old_deepbook = vault.deepbook_bps;
+    let old_cetus = vault.cetus_bps;
     vault.scallop_bps = scallop_bps;
     vault.deepbook_bps = deepbook_bps;
     vault.cetus_bps = cetus_bps;
@@ -279,9 +232,9 @@ public fun rebalance(
 
     event::emit(RebalanceEvent {
         vault_id: object::id(vault),
-        old_scallop_bps: old.0,
-        old_deepbook_bps: old.1,
-        old_cetus_bps: old.2,
+        old_scallop_bps: old_scallop,
+        old_deepbook_bps: old_deepbook,
+        old_cetus_bps: old_cetus,
         new_scallop_bps: scallop_bps,
         new_deepbook_bps: deepbook_bps,
         new_cetus_bps: cetus_bps,
@@ -289,38 +242,24 @@ public fun rebalance(
     });
 }
 
-/// Emergency circuit breaker - pauses/unpauses all vault operations.
 public fun set_paused(vault: &mut Vault, _cap: &AdminCap, paused: bool) {
     vault.paused = paused;
     event::emit(PauseEvent { vault_id: object::id(vault), paused });
 }
 
-/// Update protocol fee - capped at MAX_PROTOCOL_FEE_BPS.
 public fun set_fee(vault: &mut Vault, _cap: &AdminCap, fee_bps: u64) {
     assert!(fee_bps <= MAX_PROTOCOL_FEE_BPS, EInvalidAllocation);
     vault.protocol_fee_bps = fee_bps;
 }
 
-/// Register the DeepBook BalanceManager ID on-chain for agent reference.
 public fun set_deepbook_manager(vault: &mut Vault, _cap: &AdminCap, manager_id: ID) {
     vault.deepbook_manager_id = option::some(manager_id);
 }
 
-/// Mint an AgentCap tied to this vault - given to the AI agent's signing key.
-public fun mint_agent_cap(
-    vault: &Vault,
-    _cap: &AdminCap,
-    agent_address: address,
-    ctx: &mut TxContext,
-) {
-    let agent_cap = AgentCap {
-        id: object::new(ctx),
-        vault_id: object::id(vault),
-    };
-    transfer::transfer(agent_cap, agent_address);
+public fun mint_agent_cap(vault: &Vault, _cap: &AdminCap, agent_address: address, ctx: &mut TxContext) {
+    transfer::transfer(AgentCap { id: object::new(ctx), vault_id: object::id(vault) }, agent_address);
 }
 
-/// Collect accumulated fees to fee_recipient.
 public fun collect_fees(vault: &mut Vault, _cap: &AdminCap): u64 {
     let amount = vault.pending_fees;
     vault.pending_fees = 0;
@@ -338,11 +277,9 @@ public fun allocations(vault: &Vault): (u64, u64, u64) {
 public fun position_shares(pos: &UserPosition): u64 { pos.shares }
 public fun position_owner(pos: &UserPosition): address { pos.owner }
 
-/// Calculate current share value in asset terms.
 public fun share_price(vault: &Vault): u64 {
     if (vault.total_shares == 0) return PRECISION;
-    let result = mul_div(PRECISION, vault.total_assets, vault.total_shares, rounding::down());
-    result.destroy_some()
+    mul_div_down(PRECISION, vault.total_assets, vault.total_shares)
 }
 
 #[test_only]
